@@ -1,0 +1,2 @@
+# poshell
+powershell settings
