@@ -15,15 +15,18 @@ import-module posh-git
 Set-PoshPrompt cert
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Windows
+$mnews = (invoke-restmethod https://defence-blog.com/feed/).title
+$index = 0
+Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
+Set-Alias -Name mnews -Value getMNews
 $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title 
 $index = 0
-($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })
+($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })
 $index = 0
-Function getNews { ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
+Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
 echo 	" 1.Bitübertragung 2.Sicherung 3.Vermittlung 4.Transport 5.Sitzung 6.Darstellung  7.Anwendungen", 
 	" 1.Physical       2.Data Link 3.Network     4.Transport 5.Session 6.Presentation 7.Application"
 echo    " -Imperative                                      -Deklarative",
         " -Strukturierte -Prozedurale -Objektorientierte   -Funktionale -Logische"
 "`n"
-
