@@ -20,6 +20,7 @@ Function getDir{
                 )
                 ls . -Recurse -Directory $dirName
                 }
+                # new comment
 Function pushInit{ 
                     pushd C:\Users\IT_Admin\AppData\Local\nvim\
                     git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
@@ -31,7 +32,7 @@ Function pushPro{
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
                     git add C:\Users\IT_Admin\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
                     git commit -m "new commit"
-                    git push origin main
+                    git push origin daapc
                     popd
                 }                
 Function pushit{
