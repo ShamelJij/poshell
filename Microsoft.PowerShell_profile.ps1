@@ -2,6 +2,7 @@
 function ex{exit}
 new-alias sss ex
 new-alias lll cls
+new-alias ll ls
 Function gocode{cd C:\start\code\}
 Function gopro {nvim $profile}
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
@@ -28,6 +29,18 @@ Function pushInit{
                     git push origin main
                     popd
                 }                
+Function newGit{
+                    param(
+                        $remoteLink
+                    )
+                    git init
+                    git add .
+                    git commit -m "first commit"
+                    git branch -M main
+                    git remote add origin $remoteLink
+                    git push -u origin main
+                    
+    }                
 Function pushPro{ 
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
                     git add C:\Users\IT_Admin\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
