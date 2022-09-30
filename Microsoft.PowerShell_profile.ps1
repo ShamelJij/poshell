@@ -30,9 +30,7 @@ Function pushInit{
                     popd
                 }                
 Function newGit{
-                    param(
-                        $remoteLink
-                    )
+                    $remoteLink = Read-Host "past your remote link here please" 
                     git init
                     git add .
                     git commit -m "first commit"
