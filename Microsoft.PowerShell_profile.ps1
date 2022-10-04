@@ -8,7 +8,16 @@ Function gopro {nvim $profile}
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
-Function google{ start msedge https://www.google.com}
+Function google{ 
+    $searchQuery = Read-Host "searching for? ";
+    [string[]]$Q = $searchQuery.split(" ");
+    $e = '';
+    for($i=0; $i -lt $Q.length; $i++){
+           $e += $Q[$i]+'+'  
+        }
+    echo $e;
+    start msedge https://www.google.com/search?q=$e
+    }
 Function getfile{
                 param(
                     $fileName
@@ -21,7 +30,6 @@ Function getDir{
                 )
                 ls . -Recurse -Directory $dirName
                 }
-                # new comment
 Function pushInit{ 
                     pushd C:\Users\IT_Admin\AppData\Local\nvim\
                     git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
@@ -40,9 +48,10 @@ Function newGit{
                     
     }                
 Function pushPro{ 
+                    $commMsg = Read-Host "commit message for PowerShell_profile:"
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
                     git add C:\Users\IT_Admin\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-                    git commit -m "new commit"
+                    git commit -m $commMsg 
                     git push origin daapc
                     popd
                 }                
@@ -69,6 +78,7 @@ Function goStartup {cd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Star
 Function goroot {cd "C:\Users\IT_Admin\AppData\Local\Packages"}
 Function goIdeavim {nvim "C:\Users\IT_Admin\.ideavimrc"}
 Function goBookShop {cd "C:\start\code\bookshop\bookshop"}
+import-module -Name Terminal-Icons
 import-module posh-git 
 Set-PoshPrompt cert
 Import-Module PSReadLine
