@@ -1,4 +1,5 @@
 ﻿new-alias .. cd..
+new-alias dd cd
 function ex{exit}
 new-alias sss ex
 new-alias lll cls
@@ -9,7 +10,7 @@ Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
 Function google{ 
-    $searchQuery = Read-Host "searching for? ";
+    $searchQuery = Read-Host "searching for";
     [string[]]$Q = $searchQuery.split(" ");
     $e = '';
     for($i=0; $i -lt $Q.length; $i++){
@@ -48,7 +49,7 @@ Function newGit{
                     
     }                
 Function pushPro{ 
-                    $commMsg = Read-Host "commit message for PowerShell_profile:"
+                    $commMsg = Read-Host "commit message for PowerShell_profile"
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
                     git add C:\Users\IT_Admin\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
                     git commit -m $commMsg 
