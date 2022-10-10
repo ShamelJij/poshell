@@ -62,7 +62,22 @@ Function pushit{
                     git commit -m $msg 
                     git push origin main
                 }
+Function goodNight {
+                    # load assembly System.Windows.Forms which will be used
+                    Add-Type -AssemblyName System.Windows.Forms
 
+                    # set powerstate to suspend (sleep mode)
+                    $PowerState = [System.Windows.Forms.PowerState]::Suspend;
+
+                    # do not force putting Windows to sleep
+                    $Force = $false;
+
+                    # so you can wake up your computer from sleep
+                    $DisableWake = $false;
+
+                    # do it! Set computer to sleep
+                    [System.Windows.Forms.Application]::SetSuspendState($PowerState, $Force, $DisableWake);
+                }
 $nvimdir = 'C:\Users\IT_Admin\AppData\Local\nvim'
 $inventar = 'C:\start\code\inventarComplete'
 $start = 'c:\start'
@@ -79,6 +94,7 @@ Function goStartup {cd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Star
 Function goroot {cd "C:\Users\IT_Admin\AppData\Local\Packages"}
 Function goIdeavim {nvim "C:\Users\IT_Admin\.ideavimrc"}
 Function goBookShop {cd "C:\start\code\bookshop\bookshop"}
+
 import-module -Name Terminal-Icons
 import-module posh-git 
 Set-PoshPrompt cert
