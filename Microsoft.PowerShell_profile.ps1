@@ -32,6 +32,23 @@ Function getDir{
                 )
                 ls . -Recurse -Directory $dirName
                 }
+function addgitignore{
+                git rm -rf --cached .
+                Remove-Item -Path .vscode -Recurse
+                set-content .gitignore '
+                                        .vscode/*
+                                        !.vscode/settings.json
+                                        !.vscode/tasks.json
+                                        !.vscode/launch.json
+                                        !.vscode/extensions.json
+                                        !.vscode/*.code-snippets
+
+                                        # Local History for Visual Studio Code
+                                        .history/
+
+                                        # Built Visual Studio Code Extensions
+                                        *.vsix'
+                }
 Function newGit{
                     $remoteLink = Read-Host "past your remote link here please" 
                     git init
