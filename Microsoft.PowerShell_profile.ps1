@@ -6,6 +6,7 @@ new-alias lll cls
 new-alias ll ls
 Function gocode{cd C:\start\code\}
 Function gopro {nvim $profile}
+Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
@@ -31,13 +32,6 @@ Function getDir{
                 )
                 ls . -Recurse -Directory $dirName
                 }
-Function pushInit{ 
-                    pushd C:\Users\IT_Admin\AppData\Local\nvim\
-                    git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
-                    git commit -m "new commit"
-                    git push origin main
-                    popd
-                }                
 Function newGit{
                     $remoteLink = Read-Host "past your remote link here please" 
                     git init
@@ -48,6 +42,21 @@ Function newGit{
                     git push -u origin main
                     
     }                
+Function pushInit{ 
+                    pushd C:\Users\IT_Admin\AppData\Local\nvim\
+                    git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
+                    git commit -m "new commit"
+                    git push origin main
+                    popd
+                }                
+Function pushWT{
+                    $commMsgWT = Read-Host "commit message for WindowsTerminal settings.json"
+                    pushd C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\
+                    git add C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+                    git commit -m $commMsgWT 
+                    git push origin daapc
+                    popd
+                }
 Function pushPro{ 
                     $commMsg = Read-Host "commit message for PowerShell_profile"
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
@@ -109,7 +118,7 @@ $index = 0
 ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
-Set-Alias -Name news -Value getNews
+Set-Alias -Name news -Value getNews 
 echo 	" 1.Bitübertragung 2.Sicherung 3.Vermittlung 4.Transport 5.Sitzung 6.Darstellung  7.Anwendungen", 
 	" 1.Physical       2.Data Link 3.Network     4.Transport 5.Session 6.Presentation 7.Application"
 echo    " -Imperative                                      -Deklarative",
