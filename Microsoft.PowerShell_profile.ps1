@@ -4,12 +4,56 @@ function ex{exit}
 new-alias sss ex
 new-alias lll cls
 new-alias ll ls
+$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
 Function gocode{cd C:\start\code\}
 Function gopro {nvim $profile}
 Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+Function addtask{
+
+    param([string]$taskTitle= "", [string]$taskDescription="", [datetime]$Time)
+
+	if ($tasktitle -eq "") { 
+        write-host 'first enter title as a string. Also as (HTML). Press enter'    
+        $tasktitle = read-host "Enter task title here"
+        write-host 'now enter the content of the message or the task description'
+        $taskDescription= read-host "Enter task description here"
+        write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
+        $TimeString = read-host "Enter date and time"
+        $Time = [datetime]::ParseExact($TimeString, 'MM/dd/yyyy hh:mm tt', $null);
+        write-host = "time is" $Time
+    }
+	$Random = (Get-Random)
+    $destination_file = 'c:\start\powershell\tasks\' + $Random.tostring() + (($TimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.html'
+    write-host $destination_file
+    ('<html>
+        <head>
+        <style>
+            h1 {text-align: center;
+                font-size: 200%;
+                background-color: coral;}
+            p {text-align: center;
+                font-size: 200%;}
+            </style>
+        </head>
+        <body>
+
+        <h1>$tasktitle</h1>
+        <p>$taskDescription</p>
+
+        </body>
+        </html>') | foreach-Object{$_ -replace '\$tasktitle', $tasktitle `
+                                        -replace '\$taskDescription', $taskDescription `
+                                        }| set-content $destination_file  
+    $arg = 'c:\start\test2.html' 
+	$Task = New-ScheduledTaskAction -Execute powershell.exe -Argument "start msedge $destination_file" 
+	$Trigger = New-ScheduledTaskTrigger -Once -At $Time
+	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "Reminder_$Random" -Description "Reminder"
+
+    }
 Function google{ 
     $searchQuery = Read-Host "searching for";
     [string[]]$Q = $searchQuery.split(" ");
@@ -100,7 +144,7 @@ Function goodNight {
 
                     # so you can wake up your computer from sleep
                     $DisableWake = $false;
-
+                    write-host 'good night to you too :]'
                     # do it! Set computer to sleep
                     [System.Windows.Forms.Application]::SetSuspendState($PowerState, $Force, $DisableWake);
                 }
