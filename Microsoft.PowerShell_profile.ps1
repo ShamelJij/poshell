@@ -12,6 +12,57 @@ Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTe
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+Function addToast{
+        
+param([string]$toastTitle="", [string]$toastDescription="", [string]$bildLocation ,[datetime]$toastTime)
+    if($toastTitle -eq ""){
+        write-host 'this command will produce a toast notifications'
+        $toastTitle = read-host 'Title'
+        $toastDescription = read-host 'description'
+        $bildLocation = read-host '*Optional -> image location'
+        write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
+        $toastTimeString = read-host "Enter date and time"
+        $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
+        write-host = "time is" $toastTime
+        }
+	$toastRandom = (Get-Random)
+    $toastdestination_file = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.xml'
+    write-host $toastdestination_file
+#Specify Launcher App ID
+    $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
+ 
+#Load Assemblies
+    [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+    [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+ 
+#Build XML Template
+[xml]$ToastTemplate = @"
+<toast>
+    <visual>
+        <binding template="ToastImageAndText03">
+            <text id="1">$toastTitle</text>
+            <text id="2">$toastDescription</text>
+            <image id="1" src="$bildLocation" />
+        </binding>
+    </visual>
+</toast>
+"@ ;
+$ToastTemplate | set-content $toastdestination_file;
+ 
+
+#Prepare XML
+    $ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
+    $ToastXml.LoadXml($ToastTemplate.OuterXml)
+     
+#Prepare and Create Toast
+    $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
+    $showToast = {[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)}
+
+	$toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $showToast 
+	$toastTrigger = New-ScheduledTaskTrigger -Once -At $toastTime
+	Register-ScheduledTask -Action $toastTask -Trigger $toastTrigger -TaskName "$toastTitle_$toastRandom" -Description "$toastDescription"
+    }
+
 Function addtask{
 
     param([string]$taskTitle= "", [string]$taskDescription="", [datetime]$Time)
@@ -51,7 +102,7 @@ Function addtask{
     $arg = 'c:\start\test2.html' 
 	$Task = New-ScheduledTaskAction -Execute powershell.exe -Argument "start msedge $destination_file" 
 	$Trigger = New-ScheduledTaskTrigger -Once -At $Time
-	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "Reminder_$Random" -Description "Reminder"
+	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "$tasktitle_$Random" -Description "$taskDescription"
 
     }
 Function google{ 
