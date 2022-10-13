@@ -4,6 +4,11 @@ function ex{exit}
 new-alias sss ex
 new-alias lll cls
 new-alias ll ls
+$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
+function checknet {
+	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
+}
 Function gocode{cd C:\start\code\}
 Function gopro {nvim $profile}
 Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
