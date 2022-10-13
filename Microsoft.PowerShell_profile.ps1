@@ -4,8 +4,6 @@ function ex{exit}
 new-alias sss ex
 new-alias lll cls
 new-alias ll ls
-$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
-start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
 Function gocode{cd C:\start\code\}
 Function gopro {nvim $profile}
 Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
@@ -103,6 +101,17 @@ Function addtask{
 	$Task = New-ScheduledTaskAction -Execute powershell.exe -Argument "start msedge $destination_file" 
 	$Trigger = New-ScheduledTaskTrigger -Once -At $Time
 	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "$tasktitle_$Random" -Description "$taskDescription"
+
+    }
+Function searchGithub {
+    $searchGit = read-host "searching for";
+    [string[]]$Qg = $searchGit.split(" ");
+    $eg = '';
+    for($ig=0; $ig -lt $Qg.length; $ig++){
+           $eg += $Qg[$ig]+'+'  
+        }
+    echo $eg;
+    start msedge https://github.com/search?q=$eg
 
     }
 Function google{ 
@@ -217,9 +226,13 @@ Function goIdeavim {nvim "C:\Users\IT_Admin\.ideavimrc"}
 Function goBookShop {cd "C:\start\code\bookshop\bookshop"}
 
 import-module -Name Terminal-Icons
-import-module posh-git 
+# import-module posh-git 
 Set-PoshPrompt cert
 Import-Module PSReadLine
+clear
+$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
+echo " `n"
 Set-PSReadLineOption -EditMode Windows
 $mnews = (invoke-restmethod https://defence-blog.com/feed/).title
 $index = 0
