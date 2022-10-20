@@ -4,12 +4,15 @@ new-alias sss ex
 new-alias lll cls
 new-alias ll ls
 
+Function ex {exit}
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
 function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
 
+Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
+Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
 Function gocode{cd C:\start\code\}
 Function goText{cd c:\start\code\ueben\text\}
 Function gopro {nvim $profile}
