@@ -1,69 +1,72 @@
 ﻿new-alias .. cd..
 new-alias dd cd
-function ex{exit}
 new-alias sss ex
 new-alias lll cls
 new-alias ll ls
+
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
 function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
+
 Function gocode{cd C:\start\code\}
+Function goText{cd c:\start\code\ueben\text\}
 Function gopro {nvim $profile}
 Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+
 Function addToast{
-        
-param([string]$toastTitle="", [string]$toastDescription="", [string]$bildLocation ,[datetime]$toastTime)
-    if($toastTitle -eq ""){
-        write-host 'this command will produce a toast notifications'
-        $toastTitle = read-host 'Title'
-        $toastDescription = read-host 'description'
-        $bildLocation = read-host '*Optional -> image location'
-        write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
-        $toastTimeString = read-host "Enter date and time"
-        $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
-        write-host = "time is" $toastTime
-        }
-	$toastRandom = (Get-Random)
-    $toastdestination_file = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.xml'
-    write-host $toastdestination_file
+    param([string]$toastTitle="", [string]$toastDescription="", [string]$bildLocation ,[datetime]$toastTime)
+        if($toastTitle -eq ""){
+            write-host 'this command will produce a toast notifications'
+            $toastTitle = read-host 'Title'
+            $toastDescription = read-host 'description'
+            $bildLocation = read-host '*Optional -> image location'
+            write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
+            $toastTimeString = read-host "Enter date and time"
+            $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
+            write-host = "time is" $toastTime
+            }
+        $toastRandom = (Get-Random)
+        $toastdestination_file = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.xml'
+        write-host $toastdestination_file
 #Specify Launcher App ID
-    $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
- 
+        $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
+     
 #Load Assemblies
-    [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
-    [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+        [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+        [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
  
 #Build XML Template
-[xml]$ToastTemplate = @"
-<toast>
-    <visual>
-        <binding template="ToastImageAndText03">
-            <text id="1">$toastTitle</text>
-            <text id="2">$toastDescription</text>
-            <image id="1" src="$bildLocation" />
-        </binding>
-    </visual>
-</toast>
+        [xml]$ToastTemplate = @"
+                    <toast>
+                        <visual>
+                            <binding template="ToastImageAndText03">
+                                <text id="1">$toastTitle</text>
+                                <text id="2">$toastDescription</text>
+                                <image id="1" src="$bildLocation" />
+                            </binding>
+                        </visual>
+                    </toast>
 "@ ;
-$ToastTemplate | set-content $toastdestination_file;
- 
+
+        $ToastTemplate | set-content $toastdestination_file;
+
 
 #Prepare XML
-    $ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
-    $ToastXml.LoadXml($ToastTemplate.OuterXml)
-     
+        $ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
+        $ToastXml.LoadXml($ToastTemplate.OuterXml)
+         
 #Prepare and Create Toast
-    $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
-    $showToast = {[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)}
+        $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
+        $showToast = {[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)}
 
-	$toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $showToast 
-	$toastTrigger = New-ScheduledTaskTrigger -Once -At $toastTime
-	Register-ScheduledTask -Action $toastTask -Trigger $toastTrigger -TaskName "$toastTitle_$toastRandom" -Description "$toastDescription"
+        $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $showToast 
+        $toastTrigger = New-ScheduledTaskTrigger -Once -At $toastTime
+        Register-ScheduledTask -Action $toastTask -Trigger $toastTrigger -TaskName "$toastTitle_$toastRandom" -Description "$toastDescription"
     }
 
 Function addtask{
@@ -108,6 +111,7 @@ Function addtask{
 	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "$tasktitle_$Random" -Description "$taskDescription"
 
     }
+
 Function searchGithub {
     $searchGit = read-host "searching for";
     [string[]]$Qg = $searchGit.split(" ");
@@ -119,6 +123,7 @@ Function searchGithub {
     start msedge https://github.com/search?q=$eg
 
     }
+    
 Function google{ 
     $searchQuery = Read-Host "searching for";
     [string[]]$Q = $searchQuery.split(" ");
@@ -129,18 +134,21 @@ Function google{
     echo $e;
     start msedge https://www.google.com/search?q=$e
     }
+
 Function getfile{
                 param(
                     $fileName
                 )
                 ls . -Recurse -File $fileName
                 }
+
 Function getDir{
                 param(
                     $dirName
                 )
                 ls . -Recurse -Directory $dirName
                 }
+
 function addgitignore{
                 git rm -rf --cached .
                 Remove-Item -Path .vscode -Recurse
@@ -158,6 +166,7 @@ function addgitignore{
                                         # Built Visual Studio Code Extensions
                                         *.vsix'
                 }
+
 Function newGit{
                     $remoteLink = Read-Host "past your remote link here please" 
                     git init
@@ -168,6 +177,7 @@ Function newGit{
                     git push -u origin main
                     
     }                
+
 Function pushInit{ 
                     pushd C:\Users\IT_Admin\AppData\Local\nvim\
                     git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
@@ -175,6 +185,7 @@ Function pushInit{
                     git push origin main
                     popd
                 }                
+
 Function pushWT{
                     $commMsgWT = Read-Host "commit message for WindowsTerminal settings.json"
                     pushd C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\
@@ -183,6 +194,7 @@ Function pushWT{
                     git push origin daapc
                     popd
                 }
+
 Function pushPro{ 
                     $commMsg = Read-Host "commit message for PowerShell_profile"
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
@@ -191,12 +203,14 @@ Function pushPro{
                     git push origin daapc
                     popd
                 }                
+
 Function pushit{
                     $msg = Read-Host "enter your commit message"
                     git add .
                     git commit -m $msg 
                     git push origin main
                 }
+
 Function goodNight {
                     # load assembly System.Windows.Forms which will be used
                     Add-Type -AssemblyName System.Windows.Forms
@@ -213,6 +227,7 @@ Function goodNight {
                     # do it! Set computer to sleep
                     [System.Windows.Forms.Application]::SetSuspendState($PowerState, $Force, $DisableWake);
                 }
+
 $nvimdir = 'C:\Users\IT_Admin\AppData\Local\nvim'
 $inventar = 'C:\start\code\inventarComplete'
 $start = 'c:\start'
@@ -224,6 +239,7 @@ Function goToStart {cd c:\start}
 Set-Alias -Name gostart -Value goToStart
 Function neov {nvim .}
 set-Alias -Name n -Value neov
+
 Function nd {neovide .}
 Function goStartup {cd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"}
 Function goroot {cd "C:\Users\IT_Admin\AppData\Local\Packages"}
