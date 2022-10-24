@@ -22,52 +22,54 @@ Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
 
 Function addToast{
-    param([string]$toastTitle="", [string]$toastDescription="", [string]$bildLocation ,[datetime]$toastTime)
+    param([string]$toastTitle="", [string]$toastDescription="", [datetime]$toastTime)
         if($toastTitle -eq ""){
             write-host 'this command will produce a toast notifications'
             $toastTitle = read-host 'Title'
             $toastDescription = read-host 'description'
-            $bildLocation = read-host '*Optional -> image location'
             write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
             $toastTimeString = read-host "Enter date and time"
             $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
             write-host = "time is" $toastTime
             }
+        $bildLocation = 'c:\start\powershell\toast\toastIcon.png'
         $toastRandom = (Get-Random)
-        $toastdestination_file = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.xml'
-        write-host $toastdestination_file
+        $toastScript = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.ps1'
+New-Item -Path $toastScript;
+$ToastContent =  
+' 
 #Specify Launcher App ID
-        $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
-     
+$LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
+ 
 #Load Assemblies
-        [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
-        [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
+[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+[Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
  
 #Build XML Template
-        [xml]$ToastTemplate = @"
-                    <toast>
-                        <visual>
-                            <binding template="ToastImageAndText03">
-                                <text id="1">$toastTitle</text>
-                                <text id="2">$toastDescription</text>
-                                <image id="1" src="$bildLocation" />
-                            </binding>
-                        </visual>
-                    </toast>
-"@ ;
-
-        $ToastTemplate | set-content $toastdestination_file;
-
-
+[xml]$ToastTemplate = @"
+<toast>
+    <visual>
+        <binding template="ToastImageAndText03">
+            <text id="1">$toastTitle</text>
+            <text id="2">$toastDescription</text>
+            <image id="1" src="$bildLocation" />
+        </binding>
+    </visual>
+</toast>
+"@
+ 
 #Prepare XML
-        $ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
-        $ToastXml.LoadXml($ToastTemplate.OuterXml)
-         
+$ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
+$ToastXml.LoadXml($ToastTemplate.OuterXml)
+ 
 #Prepare and Create Toast
-        $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
-        $showToast = {[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)}
+$ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)' | foreach-Object{$_ -replace '\$toastTitle', $toastTitle `
+                                        -replace '\$toastDescription', $toastDescription ` -replace '\$bildLocation', $bildLocation `
+                                        }| set-content $toastScript  
 
-        $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $showToast 
+
+        $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $toastScript 
         $toastTrigger = New-ScheduledTaskTrigger -Once -At $toastTime
         Register-ScheduledTask -Action $toastTask -Trigger $toastTrigger -TaskName "$toastTitle_$toastRandom" -Description "$toastDescription"
     }
@@ -136,6 +138,17 @@ Function google{
         }
     echo $e;
     start msedge https://www.google.com/search?q=$e
+    }
+
+Function youtube{
+    $youtubeQuery = read-host "searching for";
+    [string[]]$UQ = $youtubeQuery.split(" ");
+    $ue = '';
+    for($ui=0; $ui -lt $UQ.length; $ui++){
+        $ue += $UQ[$ui]+'+'
+    }
+    echo $ue;
+    start msedge https://www.youtube.com/results?search_query=$ue
     }
 
 Function getfile{
