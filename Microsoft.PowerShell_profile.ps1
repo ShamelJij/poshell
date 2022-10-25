@@ -30,7 +30,8 @@ Function addToast{
             write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
             $toastTimeString = read-host "Enter date and time"
             $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
-            write-host = "time is" $toastTime
+            $toastDiff = (new-timespan -start (get-date) -end $toastTime)
+            write-host = "will start in", $toastDiff.hours, "hours and ", $toastDiff.minutes, "minutes";
             }
         $bildLocation = 'c:\start\powershell\toast\toastIcon.png'
         $toastRandom = (Get-Random)
@@ -86,7 +87,7 @@ Function addtask{
         write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
         $TimeString = read-host "Enter date and time"
         $Time = [datetime]::ParseExact($TimeString, 'MM/dd/yyyy hh:mm tt', $null);
-        write-host = "time is" $Time
+        write-host = "will start in " + (new-timespan -start (get-date) -end $Time)
     }
 	$Random = (Get-Random)
     $destination_file = 'c:\start\powershell\tasks\' + $Random.tostring() + (($TimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.html'
