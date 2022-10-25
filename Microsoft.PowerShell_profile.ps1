@@ -31,7 +31,7 @@ Function addToast{
             $toastTimeString = read-host "Enter date and time"
             $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
             $toastDiff = (new-timespan -start (get-date) -end $toastTime)
-            write-host = "will start in", $toastDiff.hours, "hours and ", $toastDiff.minutes, "minutes";
+            write-host "will start in", $toastDiff.hours, "hours and ", $toastDiff.minutes, "minutes";
             }
         $bildLocation = 'c:\start\powershell\toast\toastIcon.png'
         $toastRandom = (Get-Random)
