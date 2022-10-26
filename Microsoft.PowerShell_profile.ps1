@@ -193,12 +193,19 @@ Function newGit{
                     git remote add origin $remoteLink
                     git push -u origin main
                     
-    }                
+                }                
 
+Function pushahk{
+                    pushd "c:\Users\IT_Admin\AppData\Roaming\Microsoft\start Menu\Programs\Startup"
+                    git add "c:\Users\IT_Admin\AppData\Roaming\Microsoft\start Menu\Programs\Startup\keyboardRemaped.ahk"
+                    git commit -m $timenow
+                    git push origin daapc
+                    popd
+                }
 Function pushInit{ 
                     pushd C:\Users\IT_Admin\AppData\Local\nvim\
                     git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
-                    git commit -m "new commit"
+                    git commit -m $timenow
                     git push origin main
                     popd
                 }                
