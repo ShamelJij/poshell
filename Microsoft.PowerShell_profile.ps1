@@ -196,8 +196,8 @@ Function newGit{
                 }                
 
 Function pushahk{
-                    pushd "c:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\start Menu\Programs\Startup"
-                    git add "c:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\start Menu\Programs\Startup\keyboardRemaped.ahk"
+                    pushd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+                    git add "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\keyboardRemaped.ahk"
                     git commit -m $timenow
                     git push origin daapc
                     popd
