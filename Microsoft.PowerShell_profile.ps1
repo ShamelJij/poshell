@@ -13,10 +13,11 @@ function checknet {
 
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
+Function goneovim {cd "C:\Program Files\Neovim"}
 Function gocode{cd C:\start\code\}
 Function goText{cd c:\start\code\ueben\text\}
 Function gopro {nvim $profile}
-Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState} 
+Function gowt {nvim C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState}
 Function goInit {nvim C:\Users\IT_Admin\AppData\Local\nvim\init.vim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
@@ -37,15 +38,15 @@ Function addToast{
         $toastRandom = (Get-Random)
         $toastScript = 'c:\start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.ps1'
 New-Item -Path $toastScript;
-$ToastContent =  
-' 
+$ToastContent =
+'
 #Specify Launcher App ID
 $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe"
- 
+
 #Load Assemblies
 [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
 [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
- 
+
 #Build XML Template
 [xml]$ToastTemplate = @"
 <toast>
@@ -58,19 +59,19 @@ $LauncherID = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\pow
     </visual>
 </toast>
 "@
- 
+
 #Prepare XML
 $ToastXml = [Windows.Data.Xml.Dom.XmlDocument]::New()
 $ToastXml.LoadXml($ToastTemplate.OuterXml)
- 
+
 #Prepare and Create Toast
 $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
 [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)' | foreach-Object{$_ -replace '\$toastTitle', $toastTitle `
                                         -replace '\$toastDescription', $toastDescription ` -replace '\$bildLocation', $bildLocation `
-                                        }| set-content $toastScript  
+                                        }| set-content $toastScript
 
 
-        $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $toastScript 
+        $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $toastScript
         $toastTrigger = New-ScheduledTaskTrigger -Once -At $toastTime
         Register-ScheduledTask -Action $toastTask -Trigger $toastTrigger -TaskName "$toastTitle_$toastRandom" -Description "$toastDescription"
     }
@@ -79,8 +80,8 @@ Function addtask{
 
     param([string]$taskTitle= "", [string]$taskDescription="", [datetime]$Time)
 
-	if ($tasktitle -eq "") { 
-        write-host 'first enter title as a string. Also as (HTML). Press enter'    
+	if ($tasktitle -eq "") {
+        write-host 'first enter title as a string. Also as (HTML). Press enter'
         $tasktitle = read-host "Enter task title here"
         write-host 'now enter the content of the message or the task description'
         $taskDescription= read-host "Enter task description here"
@@ -110,9 +111,9 @@ Function addtask{
         </body>
         </html>') | foreach-Object{$_ -replace '\$tasktitle', $tasktitle `
                                         -replace '\$taskDescription', $taskDescription `
-                                        }| set-content $destination_file  
-    $arg = 'c:\start\test2.html' 
-	$Task = New-ScheduledTaskAction -Execute powershell.exe -Argument "start msedge $destination_file" 
+                                        }| set-content $destination_file
+    $arg = 'c:\start\test2.html'
+	$Task = New-ScheduledTaskAction -Execute powershell.exe -Argument "start msedge $destination_file"
 	$Trigger = New-ScheduledTaskTrigger -Once -At $Time
 	Register-ScheduledTask -Action $Task -Trigger $Trigger -TaskName "$tasktitle_$Random" -Description "$taskDescription"
 
@@ -123,19 +124,19 @@ Function searchGithub {
     [string[]]$Qg = $searchGit.split(" ");
     $eg = '';
     for($ig=0; $ig -lt $Qg.length; $ig++){
-           $eg += $Qg[$ig]+'+'  
+           $eg += $Qg[$ig]+'+'
         }
     echo $eg;
     start msedge https://github.com/search?q=$eg
 
     }
-    
-Function google{ 
+
+Function google{
     $searchQuery = Read-Host "searching for";
     [string[]]$Q = $searchQuery.split(" ");
     $e = '';
     for($i=0; $i -lt $Q.length; $i++){
-           $e += $Q[$i]+'+'  
+           $e += $Q[$i]+'+'
         }
     echo $e;
     start msedge https://www.google.com/search?q=$e
@@ -185,53 +186,53 @@ function addgitignore{
                 }
 
 Function newGit{
-                    $remoteLink = Read-Host "past your remote link here please" 
+                    $remoteLink = Read-Host "past your remote link here please"
                     git init
                     git add .
                     git commit -m "first commit"
                     git branch -M main
                     git remote add origin $remoteLink
                     git push -u origin main
-                    
-                }                
+
+                }
 
 Function pushahk{
-                    pushd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+                    pushd "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\"
                     git add "C:\Users\IT_Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\keyboardRemaped.ahk"
                     git commit -m $timenow
                     git push origin daapc
                     popd
                 }
-Function pushInit{ 
+Function pushInit{
                     pushd C:\Users\IT_Admin\AppData\Local\nvim\
                     git add C:\Users\IT_Admin\AppData\Local\nvim\init.vim
                     git commit -m $timenow
                     git push origin main
                     popd
-                }                
+                }
 
 Function pushWT{
                     $commMsgWT = Read-Host "commit message for WindowsTerminal settings.json"
                     pushd C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\
                     git add C:\Users\IT_Admin\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-                    git commit -m $commMsgWT 
+                    git commit -m $commMsgWT
                     git push origin daapc
                     popd
                 }
 
-Function pushPro{ 
+Function pushPro{
                     $commMsg = Read-Host "commit message for PowerShell_profile"
                     pushd C:\Users\IT_Admin\Documents\WindowsPowerShell\
                     git add C:\Users\IT_Admin\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-                    git commit -m $commMsg 
+                    git commit -m $commMsg
                     git push origin daapc
                     popd
-                }                
+                }
 
 Function pushit{
                     $msg = Read-Host "enter your commit message"
                     git add .
-                    git commit -m $msg 
+                    git commit -m $msg
                     git push origin main
                 }
 
@@ -271,7 +272,7 @@ Function goIdeavim {nvim "C:\Users\IT_Admin\.ideavimrc"}
 Function goBookShop {cd "C:\start\code\bookshop\bookshop"}
 
 import-module -Name Terminal-Icons
-# import-module posh-git 
+# import-module posh-git
 Set-PoshPrompt cert
 Import-Module PSReadLine
 clear
@@ -283,15 +284,9 @@ $mnews = (invoke-restmethod https://defence-blog.com/feed/).title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name mnews -Value getMNews
-$data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title 
+$data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
 $index = 0
-($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
-Set-Alias -Name news -Value getNews 
-echo 	" 1.Bitübertragung 2.Sicherung 3.Vermittlung 4.Transport 5.Sitzung 6.Darstellung  7.Anwendungen", 
-	" 1.Physical       2.Data Link 3.Network     4.Transport 5.Session 6.Presentation 7.Application"
-echo    " -Imperative                                      -Deklarative",
-        " -Strukturierte -Prozedurale -Objektorientierte   -Funktionale -Logische"
-"`n"
+Set-Alias -Name news -Value getNews
 
