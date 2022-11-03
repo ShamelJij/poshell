@@ -226,7 +226,7 @@ Function pushWT{
 Function pushPro{
                     $commMsg = Read-Host "commit message for PowerShell_profile"
                     pushd $start\powershell\profile
-                    git add ./profile.ps1
+                    git add .
                     git commit -m $commMsg
                     git push origin daapc
                     popd
