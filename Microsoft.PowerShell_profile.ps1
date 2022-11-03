@@ -1,7 +1,7 @@
 ﻿new-alias .. cd..
 new-alias dd cd
 new-alias sss ex
-new-alias lll cls
+new-alias cll cls
 new-alias ll ls
 
 Function ex {exit}
@@ -272,10 +272,9 @@ Function goIdeavim {nvim "C:\Users\IT_Admin\.ideavimrc"}
 Function goBookShop {cd "C:\start\code\bookshop\bookshop"}
 
 import-module -Name Terminal-Icons
-# import-module posh-git
-Set-PoshPrompt cert
+import-module posh-git
+Set-PoshPrompt tokyo
 Import-Module PSReadLine
-clear
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path c:\start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
@@ -289,4 +288,4 @@ $index = 0
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
-
+clear
