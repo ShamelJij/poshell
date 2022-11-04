@@ -4,7 +4,7 @@ new-alias sss ex
 new-alias cll cls
 new-alias ll ls
 
-$start = 'c:\start'
+$start = $env:myStart
 
 Function ex {exit}
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
@@ -15,7 +15,7 @@ Function checknet {
 
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
-Function goahk {cd $start\ahk\}
+Function goahk {cd $start\ahk}
 Function goneovim {cd "C:\Program Files\Neovim"}
 Function gocode{cd $start\code\}
 Function goText{cd $start\code\ueben\text\}
