@@ -27,13 +27,42 @@ Function gowt {nvim $home\AppData\Local\Packages\Microsoft.WindowsTerminal_8weky
 Function goInit {nvim $home\AppData\Local\nvim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
-Function commands{winget search docker; winget search mysql }
-Function downup{docker compose -f docker-compose.yml down; cd ecoui; docker build -t docker101tutorial .; cd..; docker compose -f docker-compose.yml up -d}
 
+#customPrompt
+function prompt {
+
+    #Assign Windows Title Text
+    $host.ui.RawUI.WindowTitle = "Current Folder: $pwd"
+
+    #Configure current user, current folder and date outputs
+    $CmdPromptCurrentFolder = Resolve-Path .
+    $Date = Get-Date -Format 'dd/MM-hh:mm'
+
+
+    #Calculate execution time of last cmd and convert to milliseconds, seconds or minutes
+    $LastCommand = Get-History -Count 1
+    if ($lastCommand) { $RunTime = ($lastCommand.EndExecutionTime - $lastCommand.StartExecutionTime).TotalSeconds }
+
+    if ($RunTime -ge 60) {
+        $ts = [timespan]::fromseconds($RunTime)
+        $min, $sec = ($ts.ToString("mm\:ss")).Split(":")
+        $ElapsedTime = -join ($min, " min ", $sec, " sec")
+    }
+    else {
+        $ElapsedTime = [math]::Round(($RunTime), 2)
+        $ElapsedTime = -join (($ElapsedTime.ToString()), " sec")
+    }
+
+    #Decorate the CMD Prompt
+    Write-Host "$CmdPromptCurrentFolder>" -BackgroundColor DarkBlue -ForegroundColor White -NoNewline
+    Write-Host "$date}>" -BackgroundColor DarkCyan -ForegroundColor White -NoNewline
+    # return "> "
+} #end prompt function
 #this is only for eco project
 
 Function goeco {cd $start\code\ecodaa\eco}
 Function giteco {git clone https://github.com/ShamelJij/ecoref.git}
+Function downup{docker compose -f docker-compose.yml down; cd ecoui; docker build -t docker101tutorial .; cd..; docker compose -f docker-compose.yml up -d}
 
 Function addToast{
     param([string]$toastTitle="", [string]$toastDescription="", [datetime]$toastTime)
@@ -291,7 +320,7 @@ $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
 Set-PSReadLineOption -EditMode Windows
-$mnews = (invoke-restmethod https://defence-blog.com/feed/).title
+# $mnews = (invoke-restmethod https://defence-blog.com/feed/).title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name mnews -Value getMNews
