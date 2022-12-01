@@ -15,6 +15,9 @@ Function checknet {
 
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
+Function gomongo{cd "c:\program files\MongoDB\Server\6.0\bin\"}
+Function gogo{cd $start\code\crudmongo\}
+Function gosb{cd $start\code\springboot\}
 Function goahk {cd $start\ahk}
 Function goneovim {cd "C:\Program Files\Neovim"}
 Function gocode{cd $start\code\}
@@ -24,6 +27,13 @@ Function gowt {nvim $home\AppData\Local\Packages\Microsoft.WindowsTerminal_8weky
 Function goInit {nvim $home\AppData\Local\nvim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+Function commands{winget search docker; winget search mysql }
+Function downup{docker compose -f docker-compose.yml down; cd ecoui; docker build -t docker101tutorial .; cd..; docker compose -f docker-compose.yml up -d}
+
+#this is only for eco project
+
+Function goeco {cd $start\code\ecodaa\eco}
+Function giteco {git clone https://github.com/ShamelJij/ecoref.git}
 
 Function addToast{
     param([string]$toastTitle="", [string]$toastDescription="", [datetime]$toastTime)
@@ -274,9 +284,9 @@ Function goIdeavim {nvim "$home\.ideavimrc"}
 Function goBookShop {cd "$start\code\bookshop\bookshop"}
 
 import-module -Name Terminal-Icons
-import-module posh-git
-Set-PoshPrompt tokyo
-Import-Module PSReadLine
+# import-module posh-git
+# Set-PoshPrompt tokyo
+# Import-Module PSReadLine
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
