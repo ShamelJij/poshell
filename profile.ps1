@@ -36,7 +36,7 @@ function prompt {
 
     #Configure current user, current folder and date outputs
     $CmdPromptCurrentFolder = Resolve-Path .
-    $Date = Get-Date -Format 'dd/MM-hh:mm'
+    $Date = Get-Date -Format 'dd.MM-hh:mm'
 
 
     #Calculate execution time of last cmd and convert to milliseconds, seconds or minutes
@@ -54,8 +54,8 @@ function prompt {
     }
 
     #Decorate the CMD Prompt
-    Write-Host "$CmdPromptCurrentFolder>" -BackgroundColor DarkBlue -ForegroundColor White -NoNewline
-    Write-Host "$date}>" -BackgroundColor DarkCyan -ForegroundColor White -NoNewline
+    Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
+    Write-Host "$date" -ForegroundColor DarkCyan -NoNewline
     # return "> "
 } #end prompt function
 #this is only for eco project
