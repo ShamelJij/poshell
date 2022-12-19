@@ -29,7 +29,30 @@ Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
 
 #customPrompt
+
+function Write-BranchName () {
+    try {
+        $branch = git rev-parse --abbrev-ref HEAD
+
+        if ($branch -eq "HEAD") {
+            # we're probably in detached HEAD state, so print the SHA
+            $branch = git rev-parse --short HEAD
+            Write-Host "$branch" -ForegroundColor "red"
+        }
+        else {
+            # we're on an actual branch, so print it
+            Write-Host "$branch" -ForegroundColor "cyan"
+        }
+    } catch {
+        # we'll end up here if we're in a newly initiated git repo
+        Write-Host "no branches yet" -ForegroundColor "yellow"
+    }
+}
+
 function prompt {
+
+    #Assing Branchname from the fucntion
+    $branchName = Write-BranchName
 
     #Assign Windows Title Text
     $host.ui.RawUI.WindowTitle = "Current Folder: $pwd"
@@ -53,11 +76,20 @@ function prompt {
         $ElapsedTime = -join (($ElapsedTime.ToString()), " sec")
     }
 
-    #Decorate the CMD Prompt
-    Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
-    Write-Host "$date" -ForegroundColor DarkCyan -NoNewline
-    # return "> "
-} #end prompt function
+    if (Test-Path .git) {
+        #Decorate the CMD Prompt
+        Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
+        Write-Host "$date>$branchName" -ForegroundColor DarkCyan -NoNewline
+    }
+    else {
+        # we're not in a repo so don't bother displaying branch name/sha
+        #Decorate the CMD Prompt
+        Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
+        Write-Host "$date" -ForegroundColor DarkCyan -NoNewline
+    }
+
+}
+#end prompt function
 #this is only for eco project
 
 Function goeco {cd $start\code\ecodaa\eco}
@@ -313,7 +345,7 @@ Function goIdeavim {nvim "$home\.ideavimrc"}
 Function goBookShop {cd "$start\code\bookshop\bookshop"}
 
 import-module -Name Terminal-Icons
-# import-module posh-git
+import-module posh-git
 # Set-PoshPrompt tokyo
 # Import-Module PSReadLine
 $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
