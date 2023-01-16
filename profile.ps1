@@ -360,7 +360,10 @@ $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
 # clear
-Function getWNews {(Invoke-RestMethod "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/mainz?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json").days | select datetime, temp, description}
+$nextDays = (Invoke-RestMethod "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/mainz?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json").days
+Function getWNews {
+    $nextDays | foreach {$i=0}{new-object pscustomobject -prop @{date=$_.datetime;day=(get-date $_.datetime).DayOfWeek;temp=$_.temp; description=$_.description}; $i++} | format-table
+}
 Set-Alias -Name wnews -Value getWNews
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
