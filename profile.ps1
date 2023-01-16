@@ -357,8 +357,11 @@ Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Obje
 Set-Alias -Name mnews -Value getMNews
 $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
 $index = 0
-$index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
 # clear
+Function getWNews {(Invoke-RestMethod "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/mainz?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json").days | select datetime, temp, description}
+Set-Alias -Name wnews -Value getWNews
+Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
+Set-Alias -Name news -Value getNews
 $funks = @('timehere', 'ustime', 'goahk', 'goneovim', 'gocode', 'goText', 'gopro', 'gowt', 'goInit', 'showCode', 'github', 'addToast', 'addtask', 'searchGithub', 'google', 'youtube', 'getfile', 'getDir', 'addgitignore', 'newGit', 'pushahk', 'pushInit', 'pushWT', 'pushPro', 'pushit', 'goodNight', 'goToInventar', 'goToStart', 'neov', 'nd', 'goStartup', 'goroot', 'goIdeavim', 'goBookShop', 'getMNews', 'checknet', 'goToVim', 'getNews')
