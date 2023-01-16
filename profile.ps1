@@ -7,7 +7,7 @@ new-alias ll ls
 $start = $env:myStart
 
 Function ex {exit}
-$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+$timenow = ((get-date).ToString("'y'yy-'m'MM-'d'dd-'h'hh-'min'mm-tt"))
 Function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
@@ -347,18 +347,18 @@ import-module -Name Terminal-Icons
 import-module posh-git
 # Set-PoshPrompt tokyo
 # Import-Module PSReadLine
-$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+# $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
 start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
 Set-PSReadLineOption -EditMode Windows
-# $mnews = (invoke-restmethod https://defence-blog.com/feed/).title
+$mnews = (invoke-restmethod https://militarywatchmagazine.com/feeds/headlines.xml).title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name mnews -Value getMNews
 $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
 $index = 0
 $index = 0
-Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
+Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
 # clear
 $funks = @('timehere', 'ustime', 'goahk', 'goneovim', 'gocode', 'goText', 'gopro', 'gowt', 'goInit', 'showCode', 'github', 'addToast', 'addtask', 'searchGithub', 'google', 'youtube', 'getfile', 'getDir', 'addgitignore', 'newGit', 'pushahk', 'pushInit', 'pushWT', 'pushPro', 'pushit', 'goodNight', 'goToInventar', 'goToStart', 'neov', 'nd', 'goStartup', 'goroot', 'goIdeavim', 'goBookShop', 'getMNews', 'checknet', 'goToVim', 'getNews')
