@@ -365,6 +365,12 @@ Function getWNews {
     $nextDays | foreach {$i=0}{new-object pscustomobject -prop @{date=$_.datetime;day=(get-date $_.datetime).DayOfWeek;temp=$_.temp; description=$_.description}; $i++} | format-table
 }
 Set-Alias -Name wnews -Value getWNews
+$Financial = (Invoke-RestMethod "https://feeds.a.dj.com/rss/RSSMarketsMain.xml").title
+Function getFNews {write-output "`t {{Financial News}} `n";($Financial | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
+Set-Alias -Name fnews -Value getFNews
+$Nachrichten = (Invoke-RestMethod "https://www.finanznachrichten.de/rss-nachrichten-meistgelesen").title
+Function getDNews {write-output "`t {{Deutsche Nachrichten}} `n";($Nachrichten | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
+Set-Alias -Name dnews -Value getDNews
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
 $funks = @('timehere', 'ustime', 'goahk', 'goneovim', 'gocode', 'goText', 'gopro', 'gowt', 'goInit', 'showCode', 'github', 'addToast', 'addtask', 'searchGithub', 'google', 'youtube', 'getfile', 'getDir', 'addgitignore', 'newGit', 'pushahk', 'pushInit', 'pushWT', 'pushPro', 'pushit', 'goodNight', 'goToInventar', 'goToStart', 'neov', 'nd', 'goStartup', 'goroot', 'goIdeavim', 'goBookShop', 'getMNews', 'checknet', 'goToVim', 'getNews')
