@@ -300,7 +300,7 @@ Function pushPro{
                     pushd ($PROFILE -replace ".{33}$")
                     git add .
                     git commit -m $commMsg
-                    git push origin main
+                    git push origin daapc
                     popd
                 }
 
