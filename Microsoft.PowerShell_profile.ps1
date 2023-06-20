@@ -6,8 +6,10 @@ new-alias ll ls
 
 $start = $env:myStart
 
+Function goHistory {nvim "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\consoleHost_history.txt"}
+Function runAs {Start-Process Powershell -Verb runAs}
 Function ex {exit}
-$timenow = ((get-date).ToString("'y'yy-'m'MM-'d'dd-'h'hh-'min'mm-tt"))
+$timenow = ((get-date).ToString("'y'yy-'m'MM-'d'dd-'h'hh-'min'mm-'sec'ss-tt"))
 Function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
@@ -295,10 +297,10 @@ Function pushWT{
 
 Function pushPro{
                     $commMsg = Read-Host "commit message for PowerShell_profile"
-                    pushd $start\powershell\profile
+                    pushd ($PROFILE -replace ".{33}$")
                     git add .
                     git commit -m $commMsg
-                    git push origin daapc
+                    git push origin main
                     popd
                 }
 
@@ -346,8 +348,10 @@ Function goBookShop {cd "$start\code\bookshop\bookshop"}
 import-module -Name Terminal-Icons
 import-module posh-git
 # Set-PoshPrompt tokyo
-# Import-Module PSReadLine
-# $timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+import-Module PSReadLine
+import-Module psfzf
+set-psreadlineoption -PredictionViewStyle ListView
+set-psfzfoption -PSReadlineChordProvider 'ctrl+f' -PSReadlineChordReverseHistory 'ctrl+r'
 start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
 Set-PSReadLineOption -EditMode Windows
@@ -359,7 +363,7 @@ $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
-# clear
+ clear
 $nextDays = (Invoke-RestMethod "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/mainz?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json").days
 Function getWNews {
     $nextDays | foreach {$i=0}{new-object pscustomobject -prop @{date=$_.datetime;day=(get-date $_.datetime).DayOfWeek;temp=$_.temp; description=$_.description}; $i++} | format-table
