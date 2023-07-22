@@ -7,12 +7,12 @@ new-alias ll ls
 $start = $env:myStart
 
 Function ex {exit}
-$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
+$timenow = ((get-date).ToString("yy-MM-dd-hh-mm-ss-tt"))
 start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 Function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
-
+import-module -Name Terminal-Icons
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
 Function goahk {cd $start\ahk}
@@ -22,8 +22,10 @@ Function goText{cd $start\code\ueben\text\}
 Function gopro {nvim $profile}
 Function gowt {nvim $home\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState}
 Function goInit {nvim $home\AppData\Local\nvim}
+Function downtown {shutdown -s -t 0}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+Function githubrep{ start msedge https://github.com/ShamelJij?tab=repositories}
 
 Function addToast{
     param([string]$toastTitle="", [string]$toastDescription="", [datetime]$toastTime)
@@ -272,16 +274,77 @@ Function goStartup {cd "$home\AppData\Roaming\Microsoft\Windows\Start Menu\Progr
 Function goroot {cd "$home\AppData\Local\Packages"}
 Function goIdeavim {nvim "$home\.ideavimrc"}
 Function goBookShop {cd "$start\code\bookshop\bookshop"}
+#customPrompt
 
-import-module -Name Terminal-Icons
-import-module posh-git
-Set-PoshPrompt tokyo
-Import-Module PSReadLine
-$timenow = ((get-date).ToString("yy-mm-dd-hh-mm-ss-tt"))
-start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
-echo " `n"
-Set-PSReadLineOption -EditMode Windows
-$mnews = (invoke-restmethod https://defence-blog.com/feed/).title
+function Write-BranchName () {
+    try {
+        $branch = git rev-parse --abbrev-ref HEAD
+
+        if ($branch -eq "HEAD") {
+            # we're probably in detached HEAD state, so print the SHA
+            $branch = git rev-parse --short HEAD
+            Write-Host "$branch" -ForegroundColor "red"
+        }
+        else {
+            # we're on an actual branch, so print it
+            Write-Host "$branch" -ForegroundColor "cyan"
+        }
+    } catch {
+        # we'll end up here if we're in a newly initiated git repo
+        Write-Host "no branches yet" -ForegroundColor "yellow"
+    }
+}
+
+function prompt {
+
+    #Assing Branchname from the fucntion
+    $branchName = Write-BranchName
+
+    #Assign Windows Title Text
+    $host.ui.RawUI.WindowTitle = "Current Folder: $pwd"
+
+    #Configure current user, current folder and date outputs
+    $CmdPromptCurrentFolder = Resolve-Path .
+    $Date = Get-Date -Format 'dd.MM-hh:mm'
+
+
+    #Calculate execution time of last cmd and convert to milliseconds, seconds or minutes
+    $LastCommand = Get-History -Count 1
+    if ($lastCommand) { $RunTime = ($lastCommand.EndExecutionTime - $lastCommand.StartExecutionTime).TotalSeconds }
+
+    if ($RunTime -ge 60) {
+        $ts = [timespan]::fromseconds($RunTime)
+        $min, $sec = ($ts.ToString("mm\:ss")).Split(":")
+        $ElapsedTime = -join ($min, " min ", $sec, " sec")
+    }
+    else {
+        $ElapsedTime = [math]::Round(($RunTime), 2)
+        $ElapsedTime = -join (($ElapsedTime.ToString()), " sec")
+    }
+
+    if (Test-Path .git) {
+        #Decorate the CMD Prompt
+        Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
+        Write-Host "$date>$branchName" -ForegroundColor DarkCyan -NoNewline
+    }
+    else {
+        # we're not in a repo so don't bother displaying branch name/sha
+        #Decorate the CMD Prompt
+        Write-Host "$CmdPromptCurrentFolder>" -ForegroundColor Green -NoNewline
+        Write-Host "$date" -ForegroundColor DarkCyan -NoNewline
+    }
+
+}
+#end prompt function
+
+# import-module -Name Terminal-Icons
+# import-module posh-git
+# Set-PoshPrompt if_tea
+# Import-Module PSReadLine
+# Set-PSReadLineOption -EditMode Windows
+Function getWNews {(curl 'wttr.in/Mainz?lang=de&m' -UseBasicParsing).content}
+set-Alias -Name wnews -Value getWNews
+$mnews = (Invoke-RestMethod https://defence-blog.com/feed/ -UserAgent 'Mozilla 5.0').title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name mnews -Value getMNews
@@ -290,5 +353,5 @@ $index = 0
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
-clear
+#clear
 $funks = @('timehere', 'ustime', 'goahk', 'goneovim', 'gocode', 'goText', 'gopro', 'gowt', 'goInit', 'showCode', 'github', 'addToast', 'addtask', 'searchGithub', 'google', 'youtube', 'getfile', 'getDir', 'addgitignore', 'newGit', 'pushahk', 'pushInit', 'pushWT', 'pushPro', 'pushit', 'goodNight', 'goToInventar', 'goToStart', 'neov', 'nd', 'goStartup', 'goroot', 'goIdeavim', 'goBookShop', 'getMNews', 'checknet', 'goToVim', 'getNews')
