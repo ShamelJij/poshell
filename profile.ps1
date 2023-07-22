@@ -230,7 +230,7 @@ Function pushPro{
                     pushd $start\powershell\profile
                     git add .
                     git commit -m $commMsg
-                    git push origin daapc
+                    git push origin main
                     popd
                 }
 
