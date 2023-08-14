@@ -14,6 +14,27 @@ Function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
 
+Function gethis {
+    $UserName = "shami"
+$UserName
+$Path = "$Env:systemdrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\History"
+        if (-not (Test-Path -Path $Path)) {
+            Write-Verbose "[!] Could not find Edge History for username: $UserName"
+        }
+        $Regex = '(htt(p|s))://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?'
+        $Value = Get-Content -Path "$Env:systemdrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\History"|Select-String -AllMatches $regex |% {($_.Matches).Value} |Sort -Unique
+        $Value | ForEach-Object {
+            $Key = $_
+            if ($Key -match $Search){
+                New-Object -TypeName PSObject -Property @{
+                    User = $UserName
+                    Browser = 'Edge'
+                    DataType = 'History'
+                    Data = $_
+                }
+            }
+        }
+}
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
 Function gomongo{cd "c:\program files\MongoDB\Server\6.0\bin\"}
@@ -28,6 +49,7 @@ Function gowt {nvim $home\AppData\Local\Packages\Microsoft.WindowsTerminal_8weky
 Function goInit {nvim $home\AppData\Local\nvim}
 Function showCode{cat $profile}
 Function github{ start msedge https://github.com/ShamelJij}
+Function gitrepo{ start msedge https://github.com/ShamelJij?tab=repositories}
 
 #customPrompt
 
@@ -350,11 +372,11 @@ import-module posh-git
 # Set-PoshPrompt tokyo
 import-Module PSReadLine
 import-Module psfzf
-set-psreadlineoption -PredictionViewStyle ListView
-set-psfzfoption -PSReadlineChordProvider 'ctrl+f' -PSReadlineChordReverseHistory 'ctrl+r'
-start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
+# set-psreadlineoption -PredictionViewStyle ListView
+# set-psfzfoption -PSReadlineChordProvider 'ctrl+f' -PSReadlineChordReverseHistory 'ctrl+r'
+# start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
 echo " `n"
-Set-PSReadLineOption -EditMode Windows
+# Set-PSReadLineOption -EditMode Windows
 $mnews = (invoke-restmethod https://militarywatchmagazine.com/feeds/headlines.xml).title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
