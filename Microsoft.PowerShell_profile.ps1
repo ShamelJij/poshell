@@ -8,6 +8,7 @@ $start = $env:myStart
 
 Function goHistory {nvim "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\consoleHost_history.txt"}
 Function runAs {Start-Process Powershell -Verb runAs}
+Function runAster {Start-Process wt -Verb runAs}
 Function ex {exit}
 $timenow = ((get-date).ToString("'y'yy-'m'MM-'d'dd-'h'hh-'min'mm-'sec'ss-tt"))
 Function checknet {
@@ -125,16 +126,17 @@ Function addToast{
             write-host 'this command will produce a toast notifications'
             $toastTitle = read-host 'Title'
             $toastDescription = read-host 'description'
-            write-host 'now enter date. Example: "05/06/2022 11:05 AM". Press enter'
+            write-host 'now enter date. Example: "MM/dd/yyyy hh:mm tt or:12/06/2022 11:05 AM". Press enter'
             $toastTimeString = read-host "Enter date and time"
             $toastTime = [datetime]::ParseExact($toastTimeString, 'MM/dd/yyyy hh:mm tt', $null);
             $toastDiff = (new-timespan -start (get-date) -end $toastTime)
             write-host "will start in", $toastDiff.hours, "hours and ", $toastDiff.minutes, "minutes";
             }
-        $bildLocation = '$start\powershell\toast\toastIcon.png'
+        $bildLocation = $start + '\powershell\toast\toastIcon.png'
         $toastRandom = (Get-Random)
-        $toastScript = '$start\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.ps1'
-New-Item -Path $toastScript;
+        $toastScript = $start + '\powershell\toast\' + $toastRandom.tostring() + (($toastTimeString.replace(" ","-")).replace(":","-")).replace("/","-") + '.ps1';
+        write-host $toastScript;
+New-Item -Path $toastScript -type File;
 $ToastContent =
 '
 #Specify Launcher App ID
@@ -163,9 +165,7 @@ $ToastXml.LoadXml($ToastTemplate.OuterXml)
 
 #Prepare and Create Toast
 $ToastMessage = [Windows.UI.Notifications.ToastNotification]::New($ToastXML)
-[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)' | foreach-Object{$_ -replace '\$toastTitle', $toastTitle `
-                                        -replace '\$toastDescription', $toastDescription ` -replace '\$bildLocation', $bildLocation `
-                                        }| set-content $toastScript
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($LauncherID).Show($ToastMessage)' | foreach-Object{$_ -replace '\$toastTitle', $toastTitle ` -replace '\$toastDescription', $toastDescription ` -replace '\$bildLocation', $bildLocation ` }| set-content $toastScript
 
 
         $toastTask = New-ScheduledTaskAction -Execute powershell.exe -Argument $toastScript
