@@ -15,8 +15,51 @@ Function checknet {
 	 Get-NetAdapter | select InterfaceDescription, name, Status, LinkSpeed
 }
 
+Function jsdir {
+    $randomPic = (Invoke-RestMethod -Uri "https://randomuser.me/api/?gender=female").results.picture.thumbnail;
+    $randomJSDirectory = (Invoke-RestMethod -Uri "https://randomuser.me/api/?gender=female").results.name.first;
+    $directoryPath = "$env:myStart\randomJS";
+
+
+        if (-not (Test-Path -Path $directoryPath -PathType Container)) {
+            New-Item -Path $directoryPath -ItemType Directory -Force
+            Write-Host "Directory created: $directoryPath"
+        } else {
+            Write-Host "Directory already exists: $directoryPath"
+        }
+    New-Item -Path $directoryPath -Name  $randomJSDirectory -ItemType Directory;
+    New-Item -Path ($directoryPath + "\" + $randomJSDirectory) -Name "index.html" -ItemType File;
+    set-content -Path ($directoryPath + "\" + $randomJSDirectory + "/index.html") -Value '<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+  <div class="col text-center"><img class="rounded-circle" src="https://xsgames.co/randomusers/avatar.php?g=female"/></div>
+    <h1 class="text-center">Hello, world!</h1>
+
+    <!-- Optional JavaScript -->
+    <script src="app.js"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>'
+    New-Item -Path ($directoryPath + "\" + $randomJSDirectory) -Name "app.js" -ItemType File;
+    New-Item -Path ($directoryPath + "\" + $randomJSDirectory) -Name "style.css" -ItemType File;
+    cd ($directoryPath + "\" + $randomJSDirectory)
+}
+
 Function gethis {
-    $UserName = "shami"
+    $UserName = "shamelJij"
 $UserName
 $Path = "$Env:systemdrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\History"
         if (-not (Test-Path -Path $Path)) {
@@ -371,7 +414,7 @@ import-module -Name Terminal-Icons
 import-module posh-git
 # Set-PoshPrompt tokyo
 import-Module PSReadLine
-import-Module psfzf
+# import-Module psfzf
 # set-psreadlineoption -PredictionViewStyle ListView
 # set-psfzfoption -PSReadlineChordProvider 'ctrl+f' -PSReadlineChordReverseHistory 'ctrl+r'
 # start-transcript -path $start\powershell\sessions\$timenow.txt -NoClobber
@@ -385,7 +428,7 @@ $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
- clear
+ #clear
 $nextDays = (Invoke-RestMethod "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/mainz?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json").days
 Function getWNews {
     $nextDays | foreach {$i=0}{new-object pscustomobject -prop @{date=$_.datetime;day=(get-date $_.datetime).DayOfWeek;temp=$_.temp; description=$_.description}; $i++} | format-table
