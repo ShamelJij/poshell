@@ -15,6 +15,7 @@ Function checknet {
 import-module -Name Terminal-Icons
 Function timehere{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"W. Europe Standard Time")}
 Function ustime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"US Eastern Standard Time")}
+Function rutime{[System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::Now,"Russian Standard Time")}
 Function goahk {cd $start\ahk}
 Function goneovim {cd "C:\Program Files\Neovim"}
 Function gocode{cd $start\code\}
@@ -337,19 +338,42 @@ function prompt {
 }
 #end prompt function
 
-# import-module -Name Terminal-Icons
-# import-module posh-git
+
+import-module -Name Terminal-Icons
+import-module posh-git
 # Set-PoshPrompt if_tea
-# Import-Module PSReadLine
-# Set-PSReadLineOption -EditMode Windows
-Function getWNews {(curl 'wttr.in/Mainz?lang=de&m' -UseBasicParsing).content}
-set-Alias -Name wnews -Value getWNews
+# Set-PoshPrompt tokyo
+import-Module PSReadLine
+import-Module psfzf
+# set-psreadlineoption -PredictionViewStyle ListView
+set-psfzfoption -PSReadlineChordProvider 'ctrl+f' -PSReadlineChordReverseHistory 'ctrl+r'
+
+Function getVWnews{
+        $vcity = Read-Host "city?"
+        $vrmethod = Invoke-RestMethod "v2d.wttr.in/$vcity&?mn"
+        $vrmethod
+    }
+Set-Alias -Name vwnews -Value getVWNews
+Function getWNews {
+    $scity = Read-Host "city?"
+    $rmethod = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/$scity\?unitGroup=metric&key=GMKMAF8K4K6LJHHJH6T6Q5DUE&contentType=json"
+    $nextDays = (Invoke-RestMethod $rmethod).days
+$nextDays | foreach {$i=0}{new-object pscustomobject -prop @{date=$_.datetime;day=(get-date $_.datetime).DayOfWeek;temp=$_.temp; description=$_.description}; $i++} | format-table
+    #echo $rmethod
+}
+Set-Alias -Name wnews -Value getWNews
+Function getWtNews {
+    $city = Read-Host "city?"
+    Invoke-RestMethod "de.wttr.in/$city&?m??n2" -UseBasicParsing}
+set-Alias -Name wtnews -Value getWtNews
 $mnews = (Invoke-RestMethod https://defence-blog.com/feed/ -UserAgent 'Mozilla 5.0').title
 $index = 0
 Function getMNews {write-output "`t {{Military News}} `n";($mnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name mnews -Value getMNews
+$mmnews = (invoke-restmethod https://militarywatchmagazine.com/feeds/headlines.xml).title
+Function getMMNews {write-output "`t {{MilitaryWatchMagazine}} `n";($mmnews | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
+Set-Alias -Name mmnews -Value getMMNews
 $data  = (invoke-restmethod https://www.reddit.com/r/worldnews/.rss).title
-$index = 0
 $index = 0
 Function getNews {echo "`t {{World News}} `n"; ($data | ForEach-Object { "{0}. {1}" -f ($index++ + 1).ToString(" 00") , $_ })}
 Set-Alias -Name news -Value getNews
